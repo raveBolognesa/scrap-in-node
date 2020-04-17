@@ -1,0 +1,21 @@
+{
+  "name": "scrap-teest",
+  "version": "1.0.0",
+  "description": "Some node script to scrap urls from webs",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "scrap",
+    "test",
+    "trial"
+  ],
+  "author": "Rafael arrieta",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  }
+}
