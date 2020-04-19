@@ -27,44 +27,7 @@ const ask = async (s, extraData) => {
   }
 };
  
-
-const chainedScrap = async (
-  fn,
-  theUrlWeAreAskingFor,
-  currentNumber,
-  totalIterations,
-  o
-) => {
-  try {
-    if (currentNumber >= totalIterations + 1) {
-      console.log("amazing");
-      return amazing;
-    }
-
-    let theResults = await ask(theUrlWeAreAskingFor, o);
-
-    if (!!theResults) {
-      theResults.forEach((element, index) => {
-        // console.log(`URL${o}-${index}-${element}`);
-        amazing.push(`URL${o}-${index}-${element}`);
-
-        if (currentNumber < totalIterations) {
-          return fn(
-            fn,
-            element,
-            currentNumber + 1,
-            totalIterations,
-            `${o + "-" + index}`
-          );
-        }
-      });
-    }
-  } catch (error) {
-    console.log("error in chained scrap");
-    console.log(error);
-  }
-};
-
+ 
 const newFn = async (url, num, position,max) => {
   let list = [];
   let listFormatted = [];
@@ -88,28 +51,7 @@ const newFn = async (url, num, position,max) => {
     return { list: [], listFormatted: [], num: +num + 1 };
   }
 };
-const manageObjects33 = async (url, num) => {
-  let toreturn = [];
-  var count = 0;
-  let firstList = await newFn(url, count, "URL");
-  firstList.listFormatted.forEach((y) => toreturn.push(y.url));
-  count = firstList.num;
-  let theRes = await Promise.all(
-    firstList.listFormatted.map((e) => newFn(e.urlRaw, 0, e.urlposition))
-  );
-  // console.log("theUrls index");
-  // console.log("theUrls  x.num ", theRes);
-  theRes.forEach((x) => {
-    if (x) {
-      count = x.num;
-      // console.log("theUrls index");
-      console.log("theUrls  x.num ", x.num);
 
-      return x.listFormatted.forEach((y) => toreturn.push(y.url));
-    }
-  });
-  return toreturn;
-};
 const manageObjects = async (url, max) => {
   let toreturn = [];
   var masterAr = [];
@@ -139,33 +81,5 @@ const manageObjects = async (url, max) => {
   return toreturn;
 };
 
-var spe = async (sarr) => {
-  try {
-    let sarr = await Promise.all(
-      sarr.listFormatted.map((e) => newFn(e.urlRaw, 0, e.urlposition))
-    );
-    return sarr;
-  } catch (error) {
-    console.log("Error index");
-    return [];
-  }
-};
 
-// let theRes = []
-// let someresult
-// let firstList = await newFn(url,0)
-// someresult = firstList.num
-// while (+num<=someresult) {
-//   firstList = await newFn(url,0)
-// someresult = firstList.num
-// }
-// await Promise.all([who(), what(), where()]);
-
-// if (process.argv[3]) {
-//   let round = process.argv[3].split("=") || "some";
-//   chainedScrap(chainedScrap, url, 1, round[1], "");
-// } else {
-//   ask(url).then(console.log);
-// }
-
-module.exports = { ask, chainedScrap, newFn: manageObjects, some: "hola" };
+module.exports = { ask,  manageObjects };

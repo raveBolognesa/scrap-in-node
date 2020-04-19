@@ -5,9 +5,9 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
- 
+
 const question = (str) => new Promise((resolve) => rl.question(str, resolve));
- 
+
 const steps = {
   start: async () => {
     return steps.seeCars();
@@ -42,17 +42,16 @@ const steps = {
       "Now type a number to represent how deep u want to dig: "
     );
     if (url && deep) {
-        if (isNaN(deep) || deep < 1) {
-    console.log('type again, wrong deep number');
-    return steps.deep();
-
-        }
+      if (isNaN(deep) || deep < 1) {
+        console.log("type again, wrong deep number");
+        return steps.deep();
+      }
       console.log(
-        "\n\nIt will take a while to get all data, all urls will start  showing on console"
-      ); 
-    let theUrls = await functions.newFn(url,deep)
-    theUrls.forEach(console.log) 
-     return steps.end();
+        "\n\nIt will take a while to get all data, all urls will start  showing on console\n\n"
+      );
+      let theUrls = await functions.manageObjects(url, deep);
+      theUrls.forEach(console.log);
+      return steps.end();
     } else {
       return steps.deep();
     }
@@ -63,5 +62,5 @@ const steps = {
     rl.close();
   },
 };
- 
+
 steps.start();
