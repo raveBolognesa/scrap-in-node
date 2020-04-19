@@ -1,92 +1,67 @@
-const rp = require("request-promise");
-const $ = require("cheerio");
+const functions = require("./functions");
 
-const url = process.argv[2];
-
-let exit = 0;
-
-// 'https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States';
-const ask = async (s, extraData) => {
-  var data = [];
-  try {
-    // console.log("round");
-    // console.log(s);
-    let html = await rp(s);
-    if (!!html) {
-      let long = $(" a", html).length;
-      let hrf;
-      for (let index = 0; index <= long; index++) {
-        if (index == long) {
-          // console.log("\n\n  raaafa  end  ", data, index, long);
-          return new Promise((resolve) => resolve(data));
-        }
-        hrf = $("a", html)[index].attribs.href;
-        if (hrf && hrf.includes("http")) {
-          var newdata = data;
-          newdata.push(hrf);
-          data = newdata;
-          // console.log("\n\n  yas  end  ", data, index, long);
-        }
-      }
+const readline = require("readline");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+ 
+const question = (str) => new Promise((resolve) => rl.question(str, resolve));
+ 
+const steps = {
+  start: async () => {
+    return steps.seeCars();
+  },
+  seeCars: async () => {
+    const seeCars = await question(
+      "Would you like to scrap a web and get all its a hrefs? \n\nPlease type: \n\n--yes if you want to scrap only one url \n--no if you want to exit \n--deep if you want to scrap a web recursively, you will be later asked how deep you want to dig\n\n\n "
+    );
+    if (seeCars.toLowerCase().trim() === "yes") {
+      return steps.showCars();
     }
-  } catch (error) {
-    console.log("error asking for the ulrs at: ",'URL'+ extraData,"", s);
-    // console.log(error);
-  }
+    if (seeCars.toLowerCase().trim() === "no") {
+      return steps.end();
+    }
+
+    if (seeCars.toLowerCase().trim() === "deep") {
+      return steps.deep();
+    }
+    console.log("Error typing try again!");
+    return steps.seeCars();
+  },
+  showCars: async () => {
+    const url = await question("Now type the url: ");
+    console.log("Looking for Urls");
+    let theUrls = await functions.ask(url);
+    console.log(theUrls);
+    return steps.end();
+  },
+  deep: async () => {
+    const url = await question("Now type the url: ");
+    const deep = await question(
+      "Now type a number to represent how deep u want to dig: "
+    );
+    if (url && deep) {
+        if (isNaN(deep) || deep < 1) {
+    console.log('type again, wrong deep number');
+    return steps.deep();
+
+        }
+      console.log(
+        "\n\nIt will take a while to get all data, all urls will start  showing on console"
+      ); 
+    let theUrls = await functions.newFn(url,deep)
+    theUrls.forEach(console.log) 
+     return steps.end();
+    } else {
+      return steps.deep();
+    }
+  },
+  end: async () => {
+    console.log("\n\nOk, have a nice day");
+    console.log("Bye Bye!");
+    rl.close();
+  },
 };
  
-
-let calNum = (n1, n2) => {
-  if (n1 == 0) {
-    return "1";
-  }
-  if (n1 > 0) {
-    let st = [1];
-    for (let index = 1; index < n1; index++) {
-      st.push(index + 1);
-    }
-    return st.join("-");
-  }
-};
-
-const chainedScrap = async (
-  fn,
-  theUrlWeAreAskingFor,
-  currentNumber,
-  totalIterations,
-  o
-) => {
-  try {
-    if (currentNumber >= totalIterations + 1) {
-      return;
-    }
-
-    let theResults = await ask(theUrlWeAreAskingFor, o);
-
-    if (!!theResults) {
-      theResults.forEach((element, index) => {
-        console.log(`URL${o}-${index}-${element}`);
-
-        if (currentNumber < totalIterations) {
-          fn(
-            fn,
-            element,
-            currentNumber + 1,
-            totalIterations,
-            `${o + "-" + index}`
-          );
-        }
-      });
-    }
-  } catch (error) {
-    console.log("error in chained scrap");
-    console.log(error);
-  }
-};
-
-if (process.argv[3]) {
-  let round = process.argv[3].split("=") || "some";
-  chainedScrap(chainedScrap, url, 1, round[1], "");
-} else {
-  ask(url).then(console.log);
-}
+steps.start();
