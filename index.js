@@ -14,7 +14,7 @@ const questions = {
   },
   firstQuestion: async () => {
     const mode = await question(
-      "Would you like to scrap a web and get all its a hrefs? \n\nPlease type: \n\n--yes if you want to scrap only one url \n--no if you want to exit \n--deep if you want to scrap a web recursively, you will be later asked how deep you want to dig\n\n\n "
+      "Would you like to scrap a web and get all its urls? \n\nPlease type: \n\n--yes if you want to scrap only one url \n--no if you want to exit \n--deep if you want to scrap a web recursively, you will be later asked how deep you want to dig\n\n\n "
     );
     if (mode.toLowerCase().trim() === "yes") {
       return questions.askUrls();
