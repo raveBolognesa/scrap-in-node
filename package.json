@@ -1,5 +1,5 @@
 {
-  "name": "scrap-teest",
+  "name": "scrap-in-node",
   "version": "1.0.0",
   "description": "Some node script to scrap urls from webs",
   "main": "index.js",

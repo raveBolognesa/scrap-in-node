@@ -1,12 +1,9 @@
-para correrlo 
+# Scrap in node
 
-necesitas tener node 
+This repo serves for simple scrap of pages
 
-npm i
+## How to run it 
 
-npm run start
-
-luego sigue los pasos descritos
-
-
-node index.js url  n=numero de iteraciones(opcional)
+- first `npm i`
+- then `npm run start`
+- then follow the instructions that will prompt from the command line

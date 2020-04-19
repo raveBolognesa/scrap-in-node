@@ -8,33 +8,33 @@ const rl = readline.createInterface({
 
 const question = (str) => new Promise((resolve) => rl.question(str, resolve));
 
-const steps = {
+const questions = {
   start: async () => {
-    return steps.seeCars();
+    return questions.firstQuestion();
   },
-  seeCars: async () => {
-    const seeCars = await question(
+  firstQuestion: async () => {
+    const mode = await question(
       "Would you like to scrap a web and get all its a hrefs? \n\nPlease type: \n\n--yes if you want to scrap only one url \n--no if you want to exit \n--deep if you want to scrap a web recursively, you will be later asked how deep you want to dig\n\n\n "
     );
-    if (seeCars.toLowerCase().trim() === "yes") {
-      return steps.showCars();
+    if (mode.toLowerCase().trim() === "yes") {
+      return questions.askUrls();
     }
-    if (seeCars.toLowerCase().trim() === "no") {
-      return steps.end();
+    if (mode.toLowerCase().trim() === "no") {
+      return questions.end();
+    } 
+    if (mode.toLowerCase().trim() === "deep") {
+      return questions.deep();
     }
-
-    if (seeCars.toLowerCase().trim() === "deep") {
-      return steps.deep();
-    }
-    console.log("Error typing try again!");
-    return steps.seeCars();
+    console.log("\n\nError typing try again!\n\n");
+    return questions.firstQuestion();
   },
-  showCars: async () => {
-    const url = await question("Now type the url: ");
-    console.log("Looking for Urls");
+  askUrls: async () => {
+    const url = await question("\n\nNow type the url:\n");
+    console.log("\n\nLooking for Urls\n\n");
     let theUrls = await functions.ask(url);
-    console.log(theUrls);
-    return steps.end();
+    console.log("\n\nHere you have it!\n\n");
+    theUrls.forEach((x) => console.log(x));
+    return questions.end();
   },
   deep: async () => {
     const url = await question("Now type the url: ");
@@ -44,23 +44,23 @@ const steps = {
     if (url && deep) {
       if (isNaN(deep) || deep < 1) {
         console.log("type again, wrong deep number");
-        return steps.deep();
+        return questions.deep();
       }
       console.log(
         "\n\nIt will take a while to get all data, all urls will start  showing on console\n\n"
       );
       let theUrls = await functions.manageObjects(url, deep);
-      theUrls.forEach(console.log);
-      return steps.end();
+      console.log("\n\nHere you have it!\n\n");
+      theUrls.forEach((x) => console.log(x));
+      return questions.end();
     } else {
-      return steps.deep();
+      return questions.deep();
     }
   },
   end: async () => {
-    console.log("\n\nOk, have a nice day");
     console.log("Bye Bye!");
     rl.close();
   },
 };
 
-steps.start();
+questions.start();
